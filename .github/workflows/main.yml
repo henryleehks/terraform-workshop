@@ -4,10 +4,10 @@ on:
     branches:
         - main
     paths:
-        - 'section3/terraform/**'
+        - 'section2/terraform/**'
   pull_request:
     paths:
-        - 'section3/terraform/**'
+        - 'section2/terraform/**'
 permissions:
   id-token: write # This is required for aws oidc connection
   contents: read # This is required for actions/checkout
@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./section3/terraform
+        working-directory: ./section2/terraform
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -var "student_id=${TF_VAR_STUDENT_ID}"
+        run: terraform plan -no-color
 
         if: github.event_name == 'pull_request'
         continue-on-error: true
@@ -109,4 +109,4 @@ jobs:
         # only apply upon push to main branch
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -var "student_id=${TF_VAR_STUDENT_ID}" -input=false
+        run: terraform apply -auto-approve -input=false
